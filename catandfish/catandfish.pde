@@ -59,12 +59,29 @@ void draw()
      
 
         // show 12 bad cats
-        for(float i = 0; i < 6; i++) {
-
+        for(int i = 0; i < 6; i++) {
+          image(upperBadCat, BADCAT_INIT_X + i*BADCAT_W , BADCAT_INIT_Y);
+          image(lowerBadCat, BADCAT_INIT_X + i*BADCAT_W , BADCAT_INIT_Y + SPACE + BADCAT_H);
         }
         
         // show white cat
         image(myCat, MYCAT_X, MYCAT_Y);
+        if(fishX + FISH_W > MYCAT_X && fishX < MYCAT_X + MYCAT_W
+           && fishY < MYCAT_Y + MYCAT_H && fishY + FISH_H > MYCAT_Y){
+          gameState = GAME_WIN;
+        }
+        
+        // crash detection
+        for(int i=0; i<6; i++){
+          if(fishX + FISH_W > BADCAT_INIT_X + i*BADCAT_W && fishX < BADCAT_INIT_X + (i+1)*BADCAT_W
+             && fishY < BADCAT_INIT_Y + BADCAT_H){
+            gameState = GAME_LOSE;
+          }
+          if(fishX + FISH_W > BADCAT_INIT_X + i*BADCAT_W && fishX < BADCAT_INIT_X + (i+1)*BADCAT_W
+             && fishY + FISH_H > BADCAT_INIT_Y + BADCAT_H + SPACE){
+            gameState = GAME_LOSE;
+          }
+        }
    
         break;
   
