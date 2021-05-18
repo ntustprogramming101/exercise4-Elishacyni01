@@ -20,7 +20,8 @@ int gameState = 0;
 
 float fishX, fishY;
 final float A = 50; 
-
+float yOffset;
+float x = 0;
 
 void setup()
 {
@@ -33,6 +34,8 @@ void setup()
   lose = loadImage("img/lose.png");
   win = loadImage("img/win.png");
   restart = loadImage("img/restart.png");
+  
+  
 }
 
 void draw()
@@ -60,9 +63,30 @@ void draw()
 
         // show 12 bad cats
         for(int i = 0; i < 6; i++) {
-          image(upperBadCat, BADCAT_INIT_X + i*BADCAT_W , BADCAT_INIT_Y);
-          image(lowerBadCat, BADCAT_INIT_X + i*BADCAT_W , BADCAT_INIT_Y + SPACE + BADCAT_H);
+          float upperX = BADCAT_INIT_X + i*BADCAT_W;
+          float upperY = BADCAT_INIT_Y + yOffset;
+          float lowerX = BADCAT_INIT_X + i*BADCAT_W;
+          float lowerY = BADCAT_INIT_Y + SPACE + BADCAT_H + yOffset;
+          
+          image(upperBadCat, upperX, upperY);
+          image(lowerBadCat, lowerX, lowerY);
+          yOffset = A * sin(x);
+          x++;
+          
+          // crash detection
+          // uppercat
+          if(fishX + FISH_W > upperX && fishX < upperX + BADCAT_W
+             && fishY < upperY + BADCAT_H){
+            gameState = GAME_LOSE;
+          }
+          // lowercat
+          if(fishX + FISH_W > lowerX && fishX < lowerX + BADCAT_W
+             && fishY + FISH_H > lowerY){
+            gameState = GAME_LOSE;
+          }
         }
+        
+        
         
         // show white cat
         image(myCat, MYCAT_X, MYCAT_Y);
@@ -71,17 +95,7 @@ void draw()
           gameState = GAME_WIN;
         }
         
-        // crash detection
-        for(int i=0; i<6; i++){
-          if(fishX + FISH_W > BADCAT_INIT_X + i*BADCAT_W && fishX < BADCAT_INIT_X + (i+1)*BADCAT_W
-             && fishY < BADCAT_INIT_Y + BADCAT_H){
-            gameState = GAME_LOSE;
-          }
-          if(fishX + FISH_W > BADCAT_INIT_X + i*BADCAT_W && fishX < BADCAT_INIT_X + (i+1)*BADCAT_W
-             && fishY + FISH_H > BADCAT_INIT_Y + BADCAT_H + SPACE){
-            gameState = GAME_LOSE;
-          }
-        }
+        
    
         break;
   
